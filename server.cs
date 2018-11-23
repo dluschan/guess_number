@@ -13,7 +13,10 @@ namespace TCPSample
 
 			// Инициализация
 			IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-			int port = 8888;
+			int port = 8888; 
+			
+			int number = 1 + new Random().Next() % 100;
+			
 			TcpListener server = new TcpListener(localAddr, port);
 			// Запуск в работу
 			server.Start();
@@ -30,17 +33,18 @@ namespace TCPSample
 					{
 						if (stream.CanRead)
 						{
-							byte[] myReadBuffer = new byte[1024];
-							StringBuilder myCompleteMessage = new StringBuilder();
-							int numberOfBytesRead = 0;
-							do
-							{
-								numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-								myCompleteMessage.AppendFormat("{0}", Encoding.UTF8.GetString(myReadBuffer, 0, numberOfBytesRead));
-							}
-							while (stream.DataAvailable);
-							Console.WriteLine("Complete");
-							Byte[] responseData = Encoding.UTF8.GetBytes("УСПЕШНО!");
+							byte[] myReadBuffer = new byte[4];
+							stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+							int guess = BitConverter.ToInt32(myReadBuffer, 0);
+							string response = "";
+							if (guess == number)
+								response = "Число угадано!";
+							else if (guess < number)
+								response = "Число меньше заданного";
+							else if (guess > number)
+								response = "Число больше заданного";
+							Byte[] responseData = Encoding.UTF8.GetBytes(response);
+							Console.WriteLine(response);
 							stream.Write(responseData, 0, responseData.Length);
 						}
 					}
