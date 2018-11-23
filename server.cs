@@ -11,16 +11,10 @@ namespace TCPSample
 		{
 			Console.WriteLine("Hello World!");
 
-			// Инициализация
-			IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-			int port = 8888; 
-			
-			int number = 1 + new Random().Next() % 100;
-			
-			TcpListener server = new TcpListener(localAddr, port);
-			// Запуск в работу
+			int port = 8080;
+			int number = 1 + new Random().Next() % 100;		
+			TcpListener server = new TcpListener(IPAddress.Any, port);
 			server.Start();
-			// Бесконечный цикл
 			while (true)
 			{
 				try

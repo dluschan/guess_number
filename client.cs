@@ -10,7 +10,7 @@ namespace TCPSample
 		{
 			// Инициализация
 			string address = "127.0.0.1";
-			int port = 8888;
+			int port = 8080;
 			
 			String responseData = String.Empty;
 			do
