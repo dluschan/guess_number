@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Net.Sockets;
 
-namespace TCPSample
+namespace GuessNumber
 {
 	class Client
 	{
@@ -12,17 +12,17 @@ namespace TCPSample
 			string address = "127.0.0.1";
 			int port = 8080;
 			
+			TcpClient client = new TcpClient(address, port);
 			String responseData = String.Empty;
-			do
+			NetworkStream stream = client.GetStream();
+			try
 			{
-				Console.Write("Enter your number:");
-				int guess = int.Parse(Console.ReadLine());
-				Byte[] data = BitConverter.GetBytes(guess);
-
-				TcpClient client = new TcpClient(address, port);
-				NetworkStream stream = client.GetStream();
-				try
+				do
 				{
+					Console.Write("Enter your number:");
+					int guess = int.Parse(Console.ReadLine());
+					Byte[] data = BitConverter.GetBytes(guess);
+
 					// Отправка сообщения
 					stream.Write(data, 0, data.Length);
 					// Получение ответа
@@ -38,13 +38,14 @@ namespace TCPSample
 					responseData = completeMessage.ToString();
 					Console.WriteLine(responseData);
 				}
-				finally
-				{
-					stream.Close();
-					client.Close();
-				}
+				while(responseData != "Число угадано!");
 			}
-			while(responseData != "Число угадано!");
+			finally
+			{
+				stream.Close();
+				client.Close();
+			}
+			
 		}
 	}
 }
